@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "whatGame",
-    "slug": "whatGame",
+    "name": "What Should I Play?",
+    "slug": "WhatShouldIPlay",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#ff734e"
     },
     "updates": {
       "fallbackToCacheTimeout": 0

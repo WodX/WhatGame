@@ -15,21 +15,24 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Home({ navigation }) {
   const [randomGame, setRandomGame] = useState([]);
+  const [data, setData] = useState(null);
 
   useEffect(() => {
-    const getDataAsync = async () => {
-      const result = await getData();
-      if (result == null) {
+    getData().then(async (outerData) => {
+      if (!outerData) {
         await storeData(initialData);
-        const newResult = await getData();
-        setRandomGame(newResult[Math.floor(Math.random() * newResult.length)]);
+        setData(await getData());
       } else {
-        setRandomGame(result[Math.floor(Math.random() * result.length)]);
+        setData(outerData);
       }
-    };
-
-    getDataAsync();
+    });
   }, []);
+
+  useEffect(() => {
+    if (data) {
+      setRandomGame(data[Math.floor(Math.random() * data.length)]);
+    }
+  }, [data]);
 
   return (
     <View style={styles.container}>
@@ -62,7 +65,7 @@ function Home({ navigation }) {
         </View>
         <View style={styles.footer}>
           <TouchableOpacity
-            onPress={() => {
+            onPress={async () => {
               Alert.alert(
                 'Info',
                 'This application was developed by André Nunes',

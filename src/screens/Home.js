@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -11,10 +11,9 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 import initialData from '../initialData';
 import { getData, storeData } from '../api';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Home({ navigation }) {
-  const [randomGame, setRandomGame] = useState([]);
+  const [randomGame, setRandomGame] = useState(null);
   const [data, setData] = useState(null);
 
   useEffect(() => {
@@ -28,12 +27,6 @@ function Home({ navigation }) {
     });
   }, []);
 
-  useEffect(() => {
-    if (data) {
-      setRandomGame(data[Math.floor(Math.random() * data.length)]);
-    }
-  }, [data]);
-
   return (
     <View style={styles.container}>
       <View style={styles.logo}>
@@ -43,8 +36,8 @@ function Home({ navigation }) {
         />
       </View>
       <View style={styles.content}>
-        <View style={styles.randomGame}>
-          {randomGame.images != null ? (
+        {randomGame ? (
+          <View style={styles.randomGame}>
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate('Details', randomGame);
@@ -60,9 +53,24 @@ function Home({ navigation }) {
                 }
               />
             </TouchableOpacity>
-          ) : null}
-          <Text style={styles.title}>{randomGame.title}</Text>
-        </View>
+            <Text style={styles.title}>{randomGame.title}</Text>
+          </View>
+        ) : (
+          <View style={styles.randomGame}>
+            <TouchableOpacity
+              onPress={() => {
+                setRandomGame(data[Math.floor(Math.random() * data.length)]);
+              }}
+              style={[
+                styles.imageContainer,
+                { justifyContent: 'center', alignItems: 'center' }
+              ]}
+            >
+              <Text style={{ color: 'white', fontSize: 50 }}>?</Text>
+            </TouchableOpacity>
+            <Text style={styles.title}>What should I play?</Text>
+          </View>
+        )}
         <View style={styles.footer}>
           <TouchableOpacity
             onPress={async () => {
@@ -118,7 +126,7 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     borderRadius: 10,
-    backgroundColor: 'gray'
+    backgroundColor: '#ddd'
   },
   logo: {
     height: '45%',
